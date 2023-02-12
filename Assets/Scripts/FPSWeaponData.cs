@@ -5,7 +5,6 @@ using UnityEngine;
 public class FPSWeaponData : FPSItemData
 {
     public SlotType slotType = SlotType.Sidearm;
-    public AttackType attackType = AttackType.RaycastGun;
 
     public int baseDamage = 30;
 
@@ -26,13 +25,4 @@ public enum SlotType
     Main,
     Sidearm,
     Melee
-}
-
-//This enumerator will be used to tell the combat code how to attack.
-public enum AttackType
-{
-    RaycastGun,
-    RaycastMelee,
-    PhysicsGun,
-    Throwable
 }

@@ -33,23 +33,7 @@ public class BasicGun : MonoBehaviour
 
     private void Attack()
     {
-        switch (currentInventory.currentWeapon.attackType)
-        {
-            case AttackType.RaycastGun:
-
-                break;
-            default:
-                LoggingService.Log("You attacked but there is no active attack type!");
-        }
-
-        if(currentInventory.currentWeapon.chamberAmmo != null)
-        {
-            
-
-            
-
-            
-        }
+        
         LoggingService.Log("Click! You're out of Ammo");
 
         

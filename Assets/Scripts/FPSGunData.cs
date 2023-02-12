@@ -22,14 +22,17 @@ public class FPSGunData : FPSWeaponData
     //The minimum damage the bullet will make after traveling to the min range, expressed as a multiplier of the base damage
     public float minDamageFactor = 0.75f;
 
-    //The type of magazine that the gun can use
-    public MagazineType magazineType = MagazineType.Glock;
+    //Whether or not the weapon uses ammo to attack. Good for melee and debugging.
+    public bool usesAmmo = true;
 
-    //Data about the magazine currently being used in the gun, including the ammo within the magazine
-    public MagazineData currentMagazine;
+    //The maximum amount of ammo in the gun's magazine
+    public int magazineCapacity = 17;
 
-    //Data about the ammo currently in the chamber
-    public AmmoData chamberAmmo;
+    //The current amount of ammo in the gun's magazine
+    public int currentMagazineAmmo = 0;
+
+    //The current amount of spare ammo in your inventory
+    public int reserveAmmo = 0;
 
     //EFFECTS
 
@@ -41,14 +44,13 @@ public class FPSGunData : FPSWeaponData
     {
         //int damage = CalculateDamage(distance, armorMult);
 
-        if(currentMagazine.currentRounds > 0)
+        if(!usesAmmo || currentMagazineAmmo > 0)
         {
-            chamberAmmo = currentMagazine.currentAmmo;
-            currentMagazine.currentRounds--;
+            currentMagazineAmmo--;
         }
         else
         {
-            chamberAmmo = null;
+            LoggingService.LogError("ERROR: Weapon that needs ammo cannot attack without ammo");
         }
 
         //return damage;
@@ -58,9 +60,6 @@ public class FPSGunData : FPSWeaponData
     public int CalculateDamage(float distance, float armorMult)
     {
         float finalDamage = baseDamage;
-
-        //Velocity bonus calculations
-        finalDamage *= chamberAmmo.velocityDamageMultiplier;
 
         //Range calculations
         if(distance > maxDamageRange)
@@ -73,39 +72,31 @@ public class FPSGunData : FPSWeaponData
             LoggingService.Log("Distance: " + distance + ", Ranged Damage Calculation: " + finalDamage);
         }
 
-        //Armor & Ammo Decision Tree calculations
-        if(armorMult < 1)
-        {
-            if(chamberAmmo.isArmorPiercing)
-            {
-                finalDamage *= chamberAmmo.armorPiercingMultiplier * armorMult;
-
-                if (chamberAmmo.isHollowPoint)
-                    finalDamage *= chamberAmmo.hollowPointMultiplier;
-            }
-            else
-            {
-                finalDamage *= armorMult;
-            }
-        }
-        else
-        {
-            if (chamberAmmo.isHollowPoint)
-                finalDamage *= chamberAmmo.hollowPointMultiplier;
-        }
-
         return (int)finalDamage;
     }
 
     //Leaving virtual so that you can override for weapons like a tube-fed shotgun
-    public virtual void Reload(MagazineData newMagazine)
+    public virtual void Reload()
     {
-        if(chamberAmmo == null && newMagazine.currentRounds > 0)
+        bool plusOne = currentMagazineAmmo > 0;
+        bool canLoadFullMag = currentMagazineAmmo >= magazineCapacity;
+        int numToLoad = plusOne ? (magazineCapacity + 1) - currentMagazineAmmo : magazineCapacity - currentMagazineAmmo;
+
+        if(reserveAmmo >= numToLoad)
         {
-            chamberAmmo = newMagazine.currentAmmo;
-            newMagazine.currentRounds--;
+            if (plusOne)
+                currentMagazineAmmo = magazineCapacity + 1;
+            else
+                currentMagazineAmmo = magazineCapacity;
+
+            reserveAmmo -= numToLoad;
         }
-        currentMagazine = newMagazine;
+        else
+        {
+            currentMagazineAmmo += numToLoad;
+            reserveAmmo = 0;
+        }
+        
     }
 
 }

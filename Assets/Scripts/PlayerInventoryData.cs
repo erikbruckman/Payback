@@ -11,10 +11,8 @@ public class PlayerInventoryData : ScriptableObject
 
     public FPSWeaponData meleeSlot;
 
-    public List<FPSWeaponData> throwableWeapons;
+    public List<FPSThrowableData> throwableWeapons;
     public int currentThrowable;
-
-    public List<MagazineData> magazines;
 
     //The currently equipped weapon
     public int currentSlot;
@@ -155,40 +153,6 @@ public class PlayerInventoryData : ScriptableObject
                 LoggingService.LogError("ERROR: Failure to return Weapon Data with slot index: " + slot);
                 return null;
         }
-    }
-
-    public bool HasMagazine(MagazineType type)
-    {
-        foreach(MagazineData data in magazines)
-        {
-            if (data.magazineType == type)
-                return true;
-        }
-
-        return false;
-    }
-
-    public MagazineData UseMagazine(MagazineType type)
-    {
-        MagazineData returnData = null;
-        if (!HasMagazine(type))
-        {
-            LoggingService.LogError("ERROR: There is no magazine of type " + type.ToString() + " to use!");
-        }
-        else
-        {            
-            for(int i = 0; i < magazines.Count; i++)
-            {
-                if (magazines[i].magazineType == type)
-                {
-                    returnData = magazines[i];
-                    RemoveMagazine(i);
-                }
-
-            }
-        }
-
-        return returnData;
     }
 
     public void RemoveMagazine(int index)
