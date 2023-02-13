@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu()]
 public class PlayerInventoryData : ScriptableObject
 {
     public FPSWeaponData primarySlot;
@@ -155,11 +156,6 @@ public class PlayerInventoryData : ScriptableObject
         }
     }
 
-    public void RemoveMagazine(int index)
-    {
-        magazines.RemoveAt(index);
-    }
-
     public int FindBestWeapon()
     {
         if (primarySlot != null)
@@ -177,5 +173,8 @@ public class PlayerInventoryData : ScriptableObject
         }
     }
 
-
+    public void Initiate()
+    {
+        EquipWeapon(FindBestWeapon());
+    }
 }

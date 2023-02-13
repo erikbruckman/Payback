@@ -6,7 +6,7 @@ public class LoggingService : MonoBehaviour
 {
     public static bool enableErrorLogs = true;
 
-    public static bool enableAllLogs = false;
+    public static bool enableAllLogs = true;
 
     public static void Log(string message)
     {

@@ -7,17 +7,19 @@ public class HitData
     public int damage;
 
     //public bool makeImpact;
-    public Transform transform;
+    public Vector3 origin;
+    public RaycastHit hit;
     public GameObject impactPrefab;
     public float caliber;
     
 
-    public HitData (int damage, Transform transform, GameObject impactPrefab, float caliber)
+    public HitData (int damage, Vector3 origin, RaycastHit hit, GameObject impactPrefab, float caliber)
     {
         this.damage = damage;
 
         //this.makeImpact = makeImpact;
-        this.transform = transform;
+        this.origin = origin;
+        this.hit = hit;
         this.impactPrefab = impactPrefab;
         this.caliber = caliber;
         
